@@ -1,14 +1,1 @@
-[root@ics021015068 home]# cd nhemraja/
-[root@ics021015068 nhemraja]# ls -ltr
 
-[root@ics021015068 nhemraja]# cd SUDO_ACCESS/
-
-Add servers in the list:
-------------------------
-[root@ics021015068 SUDO_ACCESS]# vi server_list.txt
-[root@ics021015068 SUDO_ACCESS]#
-[root@ics021015068 SUDO_ACCESS]# ./run.sh
-Enter Username for ssh: aftshaik
-Enter Password:
-Enter Sudoer Filename: sa_ics_oracleadmins
-Enter Grantee username: amoham10
