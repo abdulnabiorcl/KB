@@ -1,0 +1,4 @@
+get SIDs from PMON;
+-------------------
+
+ps -eaf | grep "^$username" | grep pmon | grep -v " grep "  | awk '{print substr($NF,10)}'

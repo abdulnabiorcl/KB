@@ -1,0 +1,7 @@
+Top 10 memory consuming:
+------------------------
+ps aux --sort -%mem|head -10
+
+Top 10 CPU consuming:
+------------------------
+ps aux --sort -%cpu|head -10

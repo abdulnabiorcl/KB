@@ -1,0 +1,10 @@
+
+ansible all -m shell -a "sudo cat /root/.ssh/authorized_keys" -u amoham10 --ask-pass
+
+View config file:
+-----------------
+ansible-config view
+
+List inventory Hosts:
+---------------------
+ansible all --list-hosts

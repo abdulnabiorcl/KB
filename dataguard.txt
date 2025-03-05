@@ -1,0 +1,29 @@
+
+
+DGMGRL> edit database TCEPRD_HTC set state=apply-on;
+
+DGMGRL> edit database TCEPRD_HTC set state=apply-off;
+
+DGMGRL> SHOW CONFIGURATION;
+
+DGMGRL> SHOW DATABASE TCEPRD_HTC;  -- sync status, apply lag
+
+DGMGRL> show database TCEPRD_HTC DbFileNameConvert;
+
+DGMGRL> validate database TCEPRD_HTC;
+
+
+
+Few Parameters:
+---------------
+ArchiveLagTarget
+DataGuardSyncLatency
+LogArchiveMaxProcesses
+LogArchiveMinSucceedDest
+LogArchiveTrace
+StandbyFileManagement
+DbFileNameConvert
+LogArchiveFormat
+LogFileNameConvert
+
+show database TCEPRD_HTC ArchiveLagTarget

@@ -1,0 +1,83 @@
+
+find the job:
+------------
+SET LINESIZE 200
+
+COLUMN owner_name FORMAT A20
+COLUMN job_name FORMAT A30
+COLUMN operation FORMAT A10
+COLUMN job_mode FORMAT A10
+COLUMN state FORMAT A12
+
+SELECT owner_name,
+       job_name,
+       TRIM(operation) AS operation,
+       TRIM(job_mode) AS job_mode,
+       state,
+       degree,
+       attached_sessions,
+       datapump_sessions
+FROM   dba_datapump_jobs 
+	where state='EXECUTING'
+ORDER BY 1, 2;
+
+
+Attache the Job:
+---------------
+expdp userid='"/ as sysdba"' attach="SYS"."SYS_EXPORT_TABLE_03"
+
+After attached:
+
+1. stop job
+-------------
+Export> stop
+Are you sure you wish to stop this job ([yes]/no): yes
+
+2. enable trace:
+----------------
+
+-- use the system generated job-name SYS_EXPORT_FULL_01 to re-attach to the job
+-- and specify the TRACE parameter with a tracing level:
+% expdp <LOGIN>/<PASSWORD> ATTACH=sys_export_full_01 TRACE=480300
+
+3. resume the job
+-----------------
+Export> cont
+
+Countinous monitor:
+------------------
+Export> stat=60
+Export> cont
+
+impdp userid='"/ as sysdba"' attach=SYS_EXPORT_FULL_12
+
+
+Total Work:
+-----------
+SELECT sl.sid, sl.serial#, sl.sofar, sl.MESSAGE,sl.totalwork, dp.owner_name, dp.state, dp.job_mode
+FROM v$session_longops sl, v$datapump_job dp
+WHERE sl.opname = dp.job_name;
+
+Longops:
+--------
+COLUMN sid FORMAT 99999
+COLUMN serial# FORMAT 9999999
+COLUMN machine FORMAT A20
+COLUMN progress_pct FORMAT 99999999.00
+COLUMN elapsed FORMAT A10
+COLUMN remaining FORMAT A10
+COLUMN message FORMAT A95
+set line 200
+
+SELECT s.sid,
+       s.serial#,
+       s.machine,
+       ROUND(sl.elapsed_seconds/60) || ':' || MOD(sl.elapsed_seconds,60) elapsed,
+       ROUND(sl.time_remaining/60) || ':' || MOD(sl.time_remaining,60) remaining,
+       ROUND(sl.sofar/sl.totalwork*100, 2) progress_pct,
+	   sl.message
+FROM   v$session s,
+       v$session_longops sl
+WHERE  s.sid     = sl.sid
+AND    s.serial# = sl.serial#
+AND    time_remaining > 0;

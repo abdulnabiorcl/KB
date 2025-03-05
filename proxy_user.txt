@@ -1,0 +1,24 @@
+Create:
+--------
+SQL> alter user TOT_OWN grant connect through TOTDMSADMIN;
+
+User altered.
+
+SQL>
+
+
+Verify:
+--------
+col PROXY for a30
+col CLIENT for a30
+set line 200
+
+select * from proxy_users;
+
+PROXY                          CLIENT                         AUT FLAGS
+------------------------------ ------------------------------ --- -----------------------------------
+TOTDMSADMIN                    TOT_OWN                        NO  PROXY MAY ACTIVATE ALL CLIENT ROLES
+
+Connect:
+--------
+conn TOTDMSADMIN[TOT_OWN]/password

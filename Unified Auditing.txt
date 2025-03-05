@@ -1,0 +1,120 @@
+Unified Auditing:
+-----------------
+With Oracle Database 12c, Unified Auditing is introduced. Prior to Oracle Database 12c, auditing is configured using the AUDIT_TRAIL database parameter, this is called traditional auditing.
+
+How to enable?
+--------------
+How To Enable The New Unified Auditing In 12c and 19c? (Doc ID 1567006.1)
+How To Enable Unified Audit binaries on RAC Nodes ? (Doc ID 2371837.1)
+12c Unified Auditing used with Data Guard (Doc ID 2021747.1)
+How to validate Unified auditing is enabled ? (Doc ID 2896924.1)
+Auditing Policy for STIG Unified Auditing to just capture STIG requirements (Doc ID 2872123.1)
+
+How to check unified auditing is enabled?
+-----------------------------------------
+SELECT VALUE FROM V$OPTION WHERE PARAMETER = 'Unified Auditing';
+
+List all the auditing Policies:
+-------------------------------
+select unique POLICY_NAME from AUDIT_UNIFIED_POLICIES;
+
+Enabled Polcies:
+---------------
+select *from AUDIT_UNIFIED_ENABLED_POLICIES;
+
+Policy Details:
+---------------
+select *from AUDIT_UNIFIED_POLICIES where POLICY_NAME='ORA_SECURECONFIG'
+
+select *from audit_unified_policies where POLICY_NAME='ORA_LOGON_FAILURES'
+
+Audit Records withing 5days(Excluding RMAN activities:
+------------------------------------------------------
+select *from(select OS_USERNAME,  USERHOST,  DBUSERNAME,  CLIENT_PROGRAM_NAME,  EVENT_TIMESTAMP,  ACTION_NAME,  OBJECT_NAME,UNIFIED_AUDIT_POLICIES,  SQL_TEXT from UNIFIED_AUDIT_TRAIL 
+where EVENT_TIMESTAMP_UTC>sysdate-5 and AUDIT_TYPE<>'RMAN_AUDIT' order by EVENT_TIMESTAMP_UTC desc) where rownum<100;
+
+select ENTITY_NAME,POLICY_NAME,ENTITY_TYPE,ENABLED_OPTION,SUCCESS,FAILURE
+from AUDIT_UNIFIED_ENABLED_POLICIES order by ENTITY_NAME,POLICY_NAME;
+
+Example Queries:
+---------------
+SELECT VALUE FROM V$OPTION WHERE PARAMETER = 'Unified Auditing';
+
+select *from UNIFIED_AUDIT_TRAIL where DBUSERNAME='INFODBA' order by EVENT_TIMESTAMP_UTC desc;
+
+select OS_USERNAME,USERHOST,DBUSERNAME,CLIENT_PROGRAM_NAME,EVENT_TIMESTAMP,ACTION_NAME,OBJECT_NAME,SQL_TEXT from UNIFIED_AUDIT_TRAIL where sql_text is not null and AUDIT_TYPE='Standard' and CLIENT_PROGRAM_NAME not like 'rman@%' and EVENT_TIMESTAMP_UTC > sysdate-2;
+
+select OS_USERNAME,USERHOST,DBUSERNAME,CLIENT_PROGRAM_NAME,EVENT_TIMESTAMP,ACTION_NAME,OBJECT_NAME,SQL_TEXT from UNIFIED_AUDIT_TRAIL where DBUSERNAME='USERNAME' order by EVENT_TIMESTAMP_UTC desc;
+
+select *from UNIFIED_AUDIT_TRAIL where AUDIT_TYPE='Standard' and userhost not in('hostname') and EVENT_TIMESTAMP_UTC  > sysdate -1 order by EVENT_TIMESTAMP_UTC  desc;
+
+select unique audit_type from AUDSYS.UNIFIED_AUDIT_TRAIL;
+
+select *from AUDIT_UNIFIED_ENABLED_POLICIES
+
+select unique policy_name from AUDIT_UNIFIED_POLICIES 
+
+select * from AUDIT_UNIFIED_POLICIES where audit_option like '%UPDATE%'
+
+select unique policy_name,audit_option from AUDIT_UNIFIED_POLICIES order by 1;
+
+select *from audit_unified_enabled_policies;
+
+SELECT policy_name, enabled_option, entity_name
+  FROM audit_unified_enabled_policies
+  
+  SELECT USER$.NAME, ADMIN_OPTION, DEFAULT_ROLE
+ FROM USER$, SYSAUTH$, DBA_ROLE_PRIVS
+ WHERE PRIVILEGE# = 
+ (SELECT USER# FROM USER$ WHERE NAME = 'CONNECT')
+ AND USER$.USER# = GRANTEE#
+ AND GRANTEE = USER$.NAME
+ AND GRANTED_ROLE = 'CONNECT';
+ 
+ SELECT USERNAME, SYS_PRIV, OBJECT_OWNER, OBJECT_NAME FROM DBA_USED_PRIVS;
+ 
+ select *from DBA_CONNECT_ROLE_GRANTEES;
+ 
+ select * from sys.aud$ order by NTIMESTAMP# desc;
+ 
+ 
+ SELECT VALUE FROM V$OPTION WHERE PARAMETER = 'Unified Auditing';
+
+
+select *from UNIFIED_AUDIT_TRAIL order by EVENT_TIMESTAMP_UTC desc;
+
+select count(*) from UNIFIED_AUDIT_TRAIL
+
+select *from(select *from UNIFIED_AUDIT_TRAIL where EVENT_TIMESTAMP_UTC>sysdate-5 order by EVENT_TIMESTAMP_UTC desc) where rownum<10
+
+SELECT OS_USERNAME,
+  USERHOST,
+  DBUSERNAME,
+  CLIENT_PROGRAM_NAME,
+  EVENT_TIMESTAMP,
+  ACTION_NAME,
+  OBJECT_NAME,
+  SQL_TEXT
+FROM UNIFIED_AUDIT_TRAIL
+where
+CLIENT_PROGRAM_NAME NOT LIKE 'rman@%'
+AND EVENT_TIMESTAMP_UTC > sysdate-2
+order by EVENT_TIMESTAMP_UTC desc;
+
+select *from AUDIT_UNIFIED_POLICIES
+where POLICY_NAME='ORA_LOGON_FAILURES'
+
+SELECT policy_name, enabled_option, entity_name
+  FROM audit_unified_enabled_policies
+  
+select distinct policy_name,AUDIT_OPTION_TYPE from audit_unified_policies order by 1;
+  
+select * from audit_unified_enabled_policies;
+  
+SELECT * FROM dba_audit_mgmt_config_params  
+  
+select POLICY_NAME,AUDIT_OPTION,AUDIT_OPTION_TYPE,OBJECT_SCHEMA  from audit_unified_policies where POLICY_NAME='ORA_SECURECONFIG'
+  
+Auditing Tablespace & Partition information:
+--------------------------------------------
+select owner,table_name,interval,partitioning_type,partition_count,def_tablespace_name from dba_part_Tables where owner='AUDSYS';  

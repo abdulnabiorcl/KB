@@ -1,0 +1,14 @@
+
+OMS Logs:
+---------
+/u01/app/oracle/gc_inst135/user_projects/domains/GCDomain/servers/EMGC_OMS1/logs
+/u01/app/oracle/gc_inst135/user_projects/domains/GCDomain/servers/EMGC_OMS2/logs
+
+
+Agent CLI:
+---------
+./emctl config agent listtargets|grep database
+
+
+OMS CLI:
+--------

@@ -1,0 +1,7 @@
+To find out the service running on a specific port:
+---------------------------------------------------
+nmap -PS -sV -p 22 <ip-address>
+
+Find all the ports open on specific host:
+-----------------------------------------
+nmap -sS <ip-address>/24

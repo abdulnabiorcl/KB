@@ -1,0 +1,13 @@
+Password file:
+--------------
+
+get password file location:
+---------------------------
+ASMCMD> pwget --asm
++DATA/orapwASM
+
+Copy password file to disk:
+---------------------------
+ASMCMD> pwcopy +DATA/orapwASM /tmp
+copying +DATA/orapwASM -> /tmp/orapwASM
+ASMCMD>

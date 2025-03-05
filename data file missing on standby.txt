@@ -1,0 +1,43 @@
+Standby:
+--------
+Step 1: Find the missing file details
+-------------------------------------
+select * from gv$recover_file where error like '%FILE%';
+
+select file#,bytes,name from v$datafile where file#=347;
+
+Primary:
+--------
+Step 2: find out the file size from Primary
+-------------------------------------------
+set line 200
+col name for a100
+select file#,bytes,name from v$datafile where file#=347;
+
+
+On Standby:
+-----------
+Step 3: Set parameter standby file management to manual:
+-------------------------------------------------------
+ALTER SYSTEM SET STANDBY_FILE_MANAGEMENT=MANUAL SID='*';
+
+
+Step 4: find out the disk group
+--------------------------------
+select unique substr(name,1,30) from v$datafile;
+
+Please note while giving the below command on ASM you also need to specify the action size of the
+datafile from the primary (Query v$datafiles for Bytes column)
+
+Step 5: Create missing data file:
+---------------------------------
+alter database create datafile '/u01/app/odaorahome/oracle/product/19.0.0.0/dbhome_3/dbs/UNNAMED00347' as '+DATA/' size 32G;
+
+Step 6: Set parameter standby file management to AUTO:
+-------------------------------------------------------
+ALTER SYSTEM SET STANDBY_FILE_MANAGEMENT=AUTO SID='*';
+
+Step 7: Enable MRM
+-------------------
+SQL > recover managed standby database disconnect from session;
+

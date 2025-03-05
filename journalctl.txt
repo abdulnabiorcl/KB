@@ -1,0 +1,10 @@
+reboots:
+-----------
+journalctl --list-boots
+
+journalctl -f  (tail the log)
+
+
+journalctl -b (log from last reboot)
+
+journalctl --since "2015-01-10 17:15:00"
