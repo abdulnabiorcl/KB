@@ -17,3 +17,14 @@ Print Output:
 -------------
   - debug: var=opatch_conflicts_gh.results
 
+Execute shell script:
+--------------------
+ name: Transfer and execute a script.
+  hosts: all
+  become_user: root
+  tasks:
+  - script: date.sh
+    register: results
+  - debug:
+      var: results.stdout
+
