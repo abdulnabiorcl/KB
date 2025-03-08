@@ -12,3 +12,8 @@ ansible all --list-hosts
 To check modules installed:
 ----------------------------
 ansible-galaxy collection list
+
+Print Output:
+-------------
+  - debug: var=opatch_conflicts_gh.results
+
